@@ -32,7 +32,7 @@ SECRET_KEY = config_secret_common['django']['secret_key']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0','127.0.0.0','localhost','dev.jinsg.kr']
+ALLOWED_HOSTS = config_secret_debug['django']['allowd_hosts']
 
 
 # Application definition
