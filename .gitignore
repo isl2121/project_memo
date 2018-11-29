@@ -5,3 +5,6 @@ db.sqlite3
 /static
 .DS_Store
 venv
+/.config_secret/settings_common.json
+/.config_secret/settings_debug.json
+.idea/workspace.xml

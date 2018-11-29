@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os ,json
+import os, json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,6 +20,7 @@ CONFIG_SECRET_DIR = os.path.join(BASE_DIR, '.config_secret')
 CONFIG_SECRET_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_common.json')
 CONFIG_SECRET_DEBUG_FILE = os.path.join(CONFIG_SECRET_DIR, 'settings_debug.json')
 
+
 config_secret_common = json.loads(open(CONFIG_SECRET_COMMON_FILE).read())
 config_secret_debug = json.loads(open(CONFIG_SECRET_DEBUG_FILE).read())
 
@@ -27,6 +28,7 @@ config_secret_debug = json.loads(open(CONFIG_SECRET_DEBUG_FILE).read())
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = config_secret_common['django']['secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!

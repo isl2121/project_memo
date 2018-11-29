@@ -1,0 +1,7 @@
+{% extends 'base_layout/layout.html' %}
+
+{% block content %}
+    {% for memo in memo_list %}
+        {{ memo.title }}
+    {% endfor %}
+{% endblock content %}
