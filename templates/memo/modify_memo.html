@@ -1,0 +1,39 @@
+{% extends 'base_layout/layout.html' %}
+
+{% block content %}
+    <form method="post">
+    {% csrf_token %}
+    <div class="row">
+            <div class="col-md-12">
+              <div class="grid simple">
+                <div class="grid-title no-border">
+                  <h4>Make <span class="semi-bold">Memo</span></h4>
+                </div>
+                <div class="grid-body no-border">
+                  <br>
+                  <div class="row">
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                      <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <span class="help">e.g. "안녕하세요"</span>
+                        <div class="controls">
+                          {{ form.title }}
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">내용</label>
+                        <span class="help">e.g. "간단한 메모입니다."</span>
+                        <div class="controls">
+                            {{ form.content }}
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+                <button type="submit" class="btn btn-primary">수정하기</button>
+            </div>
+          </div>
+    </form>
+{% endblock %}
