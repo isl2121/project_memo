@@ -9,5 +9,6 @@ urlpatterns = [
     path('make/', views.make, name='make'),
     path('delete/<int:pk>/', views.delete, name='delete'),
     path('modify/<int:pk>/', views.modify, name='modify'),
-    path('like/<int:pk>/', views.like, name='like')
+    path('like/<int:pk>/', views.like, name='like'),
+    path('', include('django.contrib.auth.urls'))
 ]

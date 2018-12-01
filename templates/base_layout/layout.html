@@ -1,76 +1,74 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="ko">
-   <head>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
-      <title> 메모 프로젝트</title>
-      <!-- 부트스트랩 -->
-      <link href="{% static 'css/webarch.css' %}" rel="stylesheet" type="text/css" />
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-      <!-- 부가적인 테마 -->
-      <![endif]-->
-   </head>
-   <body class="horizontal-menu">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
+        <title> 메모 프로젝트</title>
+        <!-- 부트스트랩 -->
+        <link href="{% static 'css/webarch.css' %}" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+        <!-- 부가적인 테마 -->
+        <![endif]-->
+    </head>
+    <body class="horizontal-menu">
+        <!-- BEGIN HEADER -->
+        <!-- END HEADER -->
+        <!-- BEGIN CONTAINER -->
+        <div class="page-container row-fluid">
+            <div class="page-content">
+                <div class="pull-right bar">
+                    <div class="bar-inner">
+                        <ul>
+                            <li>
+                                <a href="#">
+                                memo
+                                </a>
+                            </li>
+                            <li>
+                                <a href=" {% url 'memo:make' %}">
+                                메모 남기기
+                                </a>
+                            </li>
+                            <li>
+                                {% if user.is_authenticated %}
+                                    {{ user.username }} 오신것을 환영합니다.
+                                {% else %}
+                                    <a href=" {% url 'memo:login' %}">
+                                        로그인하기
+                                    </a>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="row  m-r-10 m-l-10">
+                                <div class="alert {% if message.tags %} alert-{{ message.tags }} {% endif %} ">
+                                    <button class="close" data-dismiss="alert"></button>
+                                    {{ message }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
 
-      <!-- BEGIN HEADER -->
-      <!-- END HEADER -->
-      <!-- BEGIN CONTAINER -->
-      <div class="page-container row-fluid">
-
-         <div class="page-content">
-            <div class="pull-right bar">
-               <div class="bar-inner">
-                  <ul>
-                     <li>
-                        <a href="#">
-                            memo
-                        </a>
-                     </li>
-                    <li>
-                        <a href=" {% url 'memo:make' %}">
-                           메모 남기기
-                        </a>
-                     </li>
-                      <li>
-                          {% if user.is_authenticated %}
-                              {{ user.username }} 오신것을 환영합니다.
-                          {% endif %}
-                      </li>
-                  </ul>
-               </div>
-
-
+                    {% block content %}
+                    {% endblock %}
+                </div>
             </div>
-            <div class="content">
-               {% block content %}
-               {% endblock %}
-            </div>
-         </div>
-
-      </div>
-      <!-- END CONTAINER -->
-      <!-- END PAGE
-         <body class="horizontal-menu">
-         	<div class="page-content">
-         		<div class="content ">
-         			<div id="container">
-         				<div class="row hidden-xlg">
-         
-         
-         
-         				</div>
-         			</div>
-         
-         		</div>
-         	</div>
-         	<!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
-      <script src="{% static 'js/webarch.js' %}" type="text/javascript"></script>
-      <script src="//code.jquery.com/jquery.min.js"></script>
-    {% block js %}
-   {% endblock js %}
-   </body>
+        </div>
+        <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="{% static 'js/webarch.js' %}" type="text/javascript"></script>
+        <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+        <script src="http:////cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+    </body>
 </html>
+

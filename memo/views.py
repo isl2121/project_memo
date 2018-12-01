@@ -1,17 +1,37 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
-import json
+
 from .models import Memo
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .foms import UserForm, LoginForm, MemoForm
+from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+from django.db.models import Count
+
 # Create your views here.
 
 class MemoLV(ListView):
     model = Memo
+    queryset = Memo.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        orderby = request.GET.get('orderby')
+
+        if orderby == 'like':
+            print(self.queryset)
+            self.queryset = Memo.objects.annotate(like_count=Count('likes')).order_by('-like_count', '-update_time')
+            print(self.queryset)
+        elif orderby == 'mypost':
+            if User.is_authenticated:
+                user = User.objects.get(username=request.user.get_username())
+                self.queryset = Memo.objects.filter(user_name=user)
+            else:
+                self.queryset = Memo.objects.all().order_by('-update_time')
+        else:
+            self.queryset = Memo.objects.all().order_by('-update_time')
+        return super(MemoLV, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(MemoLV, self).get_context_data(**kwargs)
@@ -24,7 +44,7 @@ def signup(requset):
         form = UserForm(requset.POST)
         if form.is_valid():
             new_user = User.objects.create_user(**form.cleaned_data)
-            login(requset, new_user)
+            auth_login(requset, new_user)
             return redirect('memo:index')
     else:
         form = UserForm
@@ -40,7 +60,7 @@ def login(request):
             password = request.POST('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
+                auth_login(request, user)
                 return redirect('memo:index')
 
         return HttpResponse('로그인 실패. 다시 시도 해보세요.')
@@ -52,17 +72,21 @@ def login(request):
 
 
 def make(request):
-    if request.method == 'POST':
-        form = MemoForm(request.POST)
-        if form.is_valid():
-            memo = form.save(commit=False)
-            memo.user_name = User.objects.get(username = request.user.get_username())
-            memo.save_memo()
-            return redirect('memo:index')
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = MemoForm(request.POST)
+            if form.is_valid():
+                memo = form.save(commit=False)
+                memo.user_name = User.objects.get(username = request.user.get_username())
+                memo.save_memo()
+                return redirect('memo:index')
+        else:
+            form = MemoForm()
+        return render(request, 'memo/make_memo.html' , {'form':form})
     else:
-        form = MemoForm()
 
-    return render(request, 'memo/make_memo.html' , {'form':form})
+        messages.warning(request, '로그인한 유저만 메시지를 남길수 있습니다.')
+        return HttpResponseRedirect('/')
 
 def delete(request, pk):
     memo = Memo.objects.get(pk=pk)
@@ -70,7 +94,8 @@ def delete(request, pk):
 
     if memo.user_name == user:
         memo.delete()
-        return redirect('memo:index')
+        messages.info(request, '성공적으로 삭제되었습니다.')
+        return HttpResponseRedirect('/')
     else:
         return render(request, 'memo/warning.html')
 
@@ -91,14 +116,18 @@ def modify(request, pk):
 
     return render(request, 'memo/modify_memo.html', {'memo':memo, 'form':form})
 
-@login_required
+
 def like(request, pk):
-    memo = Memo.objects.get(pk=pk)
-    user = User.objects.get(username=request.user.get_username())
+    if request.user.is_authenticated:
+        memo = Memo.objects.get(pk=pk)
+        user = User.objects.get(username=request.user.get_username())
 
-    if memo.likes.filter(id=user.id).exists():
-        memo.likes.remove(user)
+        if memo.likes.filter(id=user.id).exists():
+            memo.likes.remove(user)
+        else:
+            memo.likes.add(user)
+        return redirect('memo:index')
+
     else:
-        memo.likes.add(user)
-
-    return redirect('memo:index')
+        messages.warning(request, '로그인한 유저만 좋아요할수 있습니다.')
+        return HttpResponseRedirect('/')
