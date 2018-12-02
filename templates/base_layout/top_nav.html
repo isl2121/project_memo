@@ -1,0 +1,64 @@
+<div class="header">
+      <!-- BEGIN TOP NAVIGATION BAR -->
+      <div class="navbar-inner">
+
+        <!-- END RESPONSIVE MENU TOGGLER -->
+        <div class="header-quick-nav">
+          <!-- BEGIN TOP NAVIGATION MENU -->
+          <div class="pull-left">
+
+            <ul class="nav quick-section">
+              <li class="quicklinks  m-r-10">
+                <a data-toggle="dropdown" class="dropdown-toggle  pull-right " href="#" id="user-options">
+                  <i class="material-icons">
+                    메모
+                  </i>
+                </a>
+              <ul class="dropdown-menu  pull-left" role="menu" aria-labelledby="user-options">
+
+                      <li>
+                        <a href="{% url 'memo:index' %}">메인화면</a>
+                      </li>
+                      <li>
+                        <a href="{% url 'memo:make' %}">메모남기기</a>
+                      </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="pull-right">
+            <ul class="nav quick-section ">
+              <li class="quicklinks">
+                <a data-toggle="dropdown" class="dropdown-toggle  pull-right " href="#" id="user-options">
+                  <i class="material-icons">
+                  {% if user.is_authenticated %}
+                        {{ user.username }} 오신것을 환영합니다.
+                  {% else %}
+                      로그인
+                  {% endif %}
+                  </i>
+                </a>
+                <ul class="dropdown-menu  pull-right" role="menu" aria-labelledby="user-options">
+                  {% if user.is_anonymous %}
+                      <li>
+                        <a href="{% url 'memo:join' %}">회원가입</a>
+                      </li>
+                      <li>
+                        <a href="{% url 'memo:login' %}">로그인</a>
+                      </li>
+                  {% else %}
+                     <li>
+                        <a href="{% url 'memo:logout' %}">Log Out</a>
+                      </li>
+                  {% endif %}
+                </ul>
+              </li>
+
+            </ul>
+          </div>
+          <!-- END CHAT TOGGLER -->
+        </div>
+        <!-- END TOP NAVIGATION MENU -->
+      </div>
+      <!-- END TOP NAVIGATION BAR -->
+    </div>
