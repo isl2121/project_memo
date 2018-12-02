@@ -17,35 +17,11 @@
     </head>
     <body class="horizontal-menu">
         <!-- BEGIN HEADER -->
+        {% include 'base_layout/top_nav.html' %}
         <!-- END HEADER -->
         <!-- BEGIN CONTAINER -->
         <div class="page-container row-fluid">
             <div class="page-content">
-                <div class="pull-right bar">
-                    <div class="bar-inner">
-                        <ul>
-                            <li>
-                                <a href="#">
-                                memo
-                                </a>
-                            </li>
-                            <li>
-                                <a href=" {% url 'memo:make' %}">
-                                메모 남기기
-                                </a>
-                            </li>
-                            <li>
-                                {% if user.is_authenticated %}
-                                    {{ user.username }} 오신것을 환영합니다.
-                                {% else %}
-                                    <a href=" {% url 'memo:login' %}">
-                                        로그인하기
-                                    </a>
-                                {% endif %}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
                 <div class="content">
                     {% if messages %}
                         {% for message in messages %}

@@ -2,12 +2,14 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView
 
 from .models import Memo
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from .foms import UserForm, LoginForm, MemoForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 
 # Create your views here.
@@ -20,9 +22,7 @@ class MemoLV(ListView):
         orderby = request.GET.get('orderby')
 
         if orderby == 'like':
-            print(self.queryset)
             self.queryset = Memo.objects.annotate(like_count=Count('likes')).order_by('-like_count', '-update_time')
-            print(self.queryset)
         elif orderby == 'mypost':
             if User.is_authenticated:
                 user = User.objects.get(username=request.user.get_username())
@@ -52,23 +52,40 @@ def signup(requset):
     return render(requset, 'user/signup.html', {'form': form})
 
 def login(request):
-
     if request.method == 'POST':
         form = LoginForm(request.POST)
+        print(request.POST['username'])
+        print(request.POST['password'])
+        print(request.POST)
+        print(form.errors)
         if form.is_valid():
-            username = request.POST('username')
-            password = request.POST('password')
+            username = request.POST['username']
+            password = request.POST['password']
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
                 return redirect('memo:index')
 
-        return HttpResponse('로그인 실패. 다시 시도 해보세요.')
+        messages.warning(request, '로그인 실패. 다시 시도 해보세요.')
+        return HttpResponseRedirect('/')
 
     else:
         form = LoginForm()
 
     return render(request, 'user/login.html', {'form':form})
+
+@login_required
+def logout(request):
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user.get_username())
+        auth_logout(request)
+
+        messages.info(request, '로그아웃 되셨습니다.')
+        return HttpResponseRedirect('/')
+
+    else:
+        messages.warning(request, '로그인한 유저만 가능합니다.')
+        return HttpResponseRedirect('/')
 
 
 def make(request):

@@ -3,7 +3,7 @@
 {% extends 'base_layout/layout.html' %}
 {% block content %}
 {% load custom_tags %}
-<div class="row col-md-12 m-b-10 m-l-10 pull-right">
+<div class="row col-md-12 m-b-10 m-l-10">
     정렬하기
     <div class="btn-group">
         <a class="btn dropdown-toggle btn-demo-space" data-toggle="dropdown" href="#"> 정렬 <span class="caret"></span> </a>
@@ -16,14 +16,13 @@
         </ul>
     </div>
 </div>
-<div class="row visible-xlg">
+<div class="row">
     {% for num in '1230' %}
         <div class="col-md-3 col-sm-6">
             {% for memo in memo_list %}
                 {% with result=forloop.counter|modulo:4 %}
                     {% if num|to_int == result %}
                 <div class="row">
-                    <!-- BEGIN BLOG POST SIMPLE-->
                     <div class="col-md-12 m-b-10">
                         <div class="widget-item ">
                             <div class="tiles green " style="max-height:72px">
