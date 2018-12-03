@@ -13,7 +13,6 @@
 ### Docker 시작 명령어
 **docker run --name memo -p 8000:8000 -v $(pwd):/app isl2121/memo_django:0.0.2**
 
-docker 가 있으면 위에 명령어로 시작하시면 됩니다.
 
 서버가 집에 있는 라즈베리파이 라서 언제 꺼져도 이상하진 않습니다.
 
